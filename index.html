@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Curriculum</title>
+  <!-- CSS do Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Ícones do Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+  <style>
+    /* Estilos base */
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      background-color: whitesmoke;
+      color: #333;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    /* Remover sublinhado dos links */
+    a {
+      text-decoration: none;
+    }
+    /* Sidebar colapsável */
+    #collapsible-sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 60px;
+      background-color: #333;
+      overflow: hidden;
+      transition: width 0.3s ease;
+      z-index: 1100;
+    }
+    #collapsible-sidebar:hover {
+      width: 200px;
+    }
+    /* Cabeçalho da sidebar: foto e nome centralizados */
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      border-bottom: 1px solid #444;
+      flex-direction: column;
+    }
+    .sidebar-photo {
+      width: 50px;
+      height: 50px;
+      aspect-ratio: 1/1;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #fff;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    /* Exibição da foto na sidebar */
+    #sidebarProfilePhoto {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .sidebar-name a {
+      color: #fff;
+      font-size: 16px;
+    }
+    .sidebar-name {
+      margin-top: 10px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      white-space: nowrap;
+    }
+    #collapsible-sidebar:hover .sidebar-name {
+      opacity: 1;
+    }
+    /* Itens do menu na sidebar */
+    #collapsible-sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    #collapsible-sidebar ul li {
+      width: 100%;
+      animation: slideDownIcons 0.3s ease forwards;
+    }
+    @keyframes slideDownIcons {
+      from { transform: translateY(-20px); }
+      to { transform: translateY(0); }
+    }
+    #collapsible-sidebar ul li a {
+      display: flex;
+      align-items: center;
+      color: #fff;
+      padding: 15px;
+      transition: background-color 0.3s ease;
+    }
+    #collapsible-sidebar ul li a:hover {
+      background-color: #444;
+    }
+    #collapsible-sidebar ul li a i {
+      font-size: 24px;
+      margin-right: 10px;
+    }
+    #collapsible-sidebar ul li a span {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      white-space: nowrap;
+    }
+    #collapsible-sidebar:hover ul li a span {
+      opacity: 1;
+    }
+    /* Linha divisória simples */
+    #collapsible-sidebar hr {
+      border: 0;
+      border-top: 1px solid #444;
+      margin: 0;
+    }
+    /* Ícones sociais na sidebar (GitHub e LinkedIn) */
+    .sidebar-social {
+      margin: 0;
+    }
+    .sidebar-social a {
+      display: flex;
+      align-items: center;
+      color: #fff;
+      padding: 15px;
+      transition: background-color 0.3s ease;
+    }
+    .sidebar-social a:hover {
+      background-color: #444;
+    }
+    .sidebar-social a i {
+      font-size: 24px;
+      margin-right: 10px;
+    }
+    .sidebar-social a span {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      white-space: nowrap;
+    }
+    #collapsible-sidebar:hover .sidebar-social a span {
+      opacity: 1;
+    }
+    /* Rodapé da sidebar */
+    .sidebar-footer {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      font-size: 12px;
+      color: #ccc;
+    }
+    /* Ajuste do conteúdo da página para não ficar oculto pela sidebar */
+    .content-wrapper {
+      margin-left: 60px;
+      transition: margin-left 0.3s ease;
+    }
+    #collapsible-sidebar:hover ~ .content-wrapper {
+      margin-left: 200px;
+    }
+    /* Seções da página */
+    .section {
+      padding: 80px 0;
+    }
+    .about-me {
+      margin-bottom: 60px;
+    }
+    .section-down {
+      margin-top: 100px;
+    }
+    /* Cards das linguagens */
+    .language-card {
+      position: relative;
+      background: #fff;
+      border: 2px solid #ddd;
+      border-radius: 15px;
+      margin-bottom: 2rem;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .language-card:hover {
+      transform: scale(1.05) translateY(-5px) rotate(2deg);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    }
+    /* Efeito LED nos cards */
+    .language-card.card-python {
+      animation: ledPulsePython 5s linear infinite;
+    }
+    @keyframes ledPulsePython {
+      0% { box-shadow: 0 0 8px 2px rgba(48,105,152,0.6); }
+      50% { box-shadow: 0 0 8px 2px rgba(48,105,152,1); }
+      100% { box-shadow: 0 0 8px 2px rgba(48,105,152,0.6); }
+    }
+    .language-card.card-css {
+      animation: ledPulseCSS 5s linear infinite;
+    }
+    @keyframes ledPulseCSS {
+      0% { box-shadow: 0 0 8px 2px rgba(38,77,228,0.6); }
+      50% { box-shadow: 0 0 8px 2px rgba(38,77,228,1); }
+      100% { box-shadow: 0 0 8px 2px rgba(38,77,228,0.6); }
+    }
+    .language-card.card-html {
+      animation: ledPulseHTML 5s linear infinite;
+    }
+    @keyframes ledPulseHTML {
+      0% { box-shadow: 0 0 8px 2px rgba(227,76,38,0.6); }
+      50% { box-shadow: 0 0 8px 2px rgba(227,76,38,1); }
+      100% { box-shadow: 0 0 8px 2px rgba(227,76,38,0.6); }
+    }
+    .language-card.card-js {
+      animation: ledPulseJS 5s linear infinite;
+    }
+    @keyframes ledPulseJS {
+      0% { box-shadow: 0 0 8px 2px rgba(240,219,79,0.6); }
+      50% { box-shadow: 0 0 8px 2px rgba(240,219,79,1); }
+      100% { box-shadow: 0 0 8px 2px rgba(240,219,79,0.6); }
+    }
+    .language-card.card-sql {
+      animation: ledPulseSQL 5s linear infinite;
+    }
+    @keyframes ledPulseSQL {
+      0% { box-shadow: 0 0 8px 2px rgba(0,128,0,0.6); }
+      50% { box-shadow: 0 0 8px 2px rgba(0,128,0,1); }
+      100% { box-shadow: 0 0 8px 2px rgba(0,128,0,0.6); }
+    }
+    .language-card .card-body {
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+    .language-header {
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .language-icon {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      margin-left: 10px;
+    }
+    /* Seção de educação e certificados */
+    #formacoes-certificados {
+      padding: 80px 0;
+      background-color: #f9f9f9;
+    }
+    .card-formation, .card-certificate {
+      border: 2px solid #ddd;
+      border-radius: 15px;
+      background: #fff;
+      margin-bottom: 2rem;
+      transition: transform 0.3s ease;
+    }
+    .card-formation:hover, .card-certificate:hover {
+      transform: scale(1.03);
+    }
+    .card-formation .card-body,
+    .card-certificate .card-body {
+      padding: 1.5rem;
+      color: #000; 
+    }
+    /* Imagens de educação e certificados */
+    .formation-img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .certificates-grid .col-3 {
+      padding: 5px;
+    }
+    .certificate-img {
+      width: 100%;
+      height: auto;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      transition: transform 0.3s ease;
+    }
+    .certificate-img:hover {
+      transform: scale(1.1);
+    }
+    /* Cores dos links dos certificados */
+    .link-1to5 { color: #41DFA1; }
+    .link-6 { color: #FFA048; }
+    .link-7to9 { color: #ABD94E; }
+    /* Títulos */
+    h2, h3, h5 {
+      color: #333;
+    }
+    /* Gráfico das linguagens */
+    #linguagens-chart {
+      margin-top: 50px;
+      margin-bottom: 50px;
+    }
+    /* Foto principal do perfil */
+    #mainProfilePhoto {
+      display: block;
+      margin: 20px auto;
+      width: 120px;
+      height: 120px;
+      border-radius: 40%;
+      object-fit: cover;
+      border: 3px solid #333;
+    }
+    /* Efeito de hover nos cards de projeto */
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+    .project-card {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      margin-bottom: 30px;
+    }
+    .project-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .project-card:hover img {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar colapsável com foto, nome e ícones sociais (GitHub e LinkedIn) -->
+  <div id="collapsible-sidebar">
+    <div class="sidebar-header">
+      <!-- Foto da sidebar -->
+      <img src="img/FotoPerfilCurriculo.jpg" alt="Foto de perfil do Isaque Klehm" class="sidebar-photo" id="sidebarProfilePhoto">
+      <span class="sidebar-name"><a href="#inicio">Isaque Klehm</a></span>
+    </div>
+    <ul>
+      <li><a href="#linguagens"><i class="bi bi-code-slash"></i><span>Languages</span></a></li>
+      <li><a href="#projetos"><i class="bi bi-briefcase"></i><span>Projects</span></a></li>
+      <li><a href="#formacoes-certificados"><i class="bi bi-mortarboard"></i><span>Education</span></a></li>
+      <li><a href="#contato"><i class="bi bi-envelope"></i><span>Contact</span></a></li>
+    </ul>
+    <!-- Linha divisória -->
+    <hr>
+    <!-- Ícones sociais: GitHub e LinkedIn -->
+    <div class="sidebar-social">
+      <a href="https://github.com/isaqueklehm" target="_blank">
+        <i class="bi bi-github"></i><span>Github</span>
+      </a>
+      <a href="https://www.linkedin.com/in/isaque-klehm-3456552b9/" target="_blank">
+        <i class="bi bi-linkedin"></i><span>LinkedIn</span>
+      </a>
+    </div>
+    <!-- Rodapé da sidebar -->
+    <div class="sidebar-footer">
+      © 2025 Isaque Klehm
+    </div>
+  </div>
+
+  <!-- Conteúdo da página -->
+  <div class="content-wrapper">
+    <section id="inicio" class="container mt-5 pt-5">
+      <!-- Foto principal do perfil -->
+      <img src="img/FotoPerfilCurriculo.jpg" alt="Foto de perfil do Isaque Klehm" class="profile-photo" id="mainProfilePhoto">
+      <!-- Seção Sobre Mim -->
+      <div class="about-me">
+        <h2 align="center">About Me</h2>
+        <p align="center"><strong><i>
+          I'm Isaque Klehm, 17 years old, living in Joinville (SC). I'm in the final semester of my technical course in Systems Analysis and Development at SENAI, continuously expanding my skills in programming and technology.
+        </i></strong></p>
+        <p align="center">Always adapting and evolving. 🐍</p>
+      </div>
+    </section>
+
+    <!-- Seção de linguagens -->
+    <section id="linguagens" class="container mt-5 pt-5 section-down">
+      <h2 class="text-center mb-5">Languages</h2>
+      <h5 align="center">Some languages I know pretty well.</h5>
+      <div class="row">
+        <!-- Card do Python -->
+        <div class="col-12 col-md-6">
+          <div class="card language-card card-python">
+            <div class="card-body">
+              <div class="language-header">
+                <h3>Python</h3>
+                <img src="img/python.png" class="language-icon" alt="Python">
+              </div>
+              <p>Python is one of the languages I'm most interested in. I'm continuously exploring new libraries and improving my skills.</p>
+            </div>
+          </div>
+        </div>
+        <!-- Card do CSS -->
+        <div class="col-12 col-md-6">
+          <div class="card language-card card-css">
+            <div class="card-body">
+              <div class="language-header">
+                <h3>CSS</h3>
+                <img src="img/css-3.png" class="language-icon" alt="CSS">
+              </div>
+              <p>I have intermediate knowledge of CSS and work on making my pages more organized and visually appealing.</p>
+            </div>
+          </div>
+        </div>
+        <!-- Card do HTML -->
+        <div class="col-12 col-md-6">
+          <div class="card language-card card-html">
+            <div class="card-body">
+              <div class="language-header">
+                <h3>HTML</h3>
+                <img src="img/html.png" class="language-icon" alt="HTML">
+              </div>
+              <p>I have intermediate HTML skills and always strive to improve the structure and organization of my pages.</p>
+            </div>
+          </div>
+        </div>
+        <!-- Card do JavaScript -->
+        <div class="col-12 col-md-6">
+          <div class="card language-card card-js">
+            <div class="card-body">
+              <div class="language-header">
+                <h3>JavaScript</h3>
+                <img src="img/java-script.png" class="language-icon" alt="JavaScript">
+              </div>
+              <p>JavaScript enables me to build interactive and dynamic web applications with smooth animations and real-time feedback.</p>
+            </div>
+          </div>
+        </div>
+        <!-- Card do SQL -->
+        <div class="col-12 col-md-6">
+          <div class="card language-card card-sql">
+            <div class="card-body">
+              <div class="language-header">
+                <h3>SQL</h3>
+                <img src="img/sql-server.png" class="language-icon" alt="SQL">
+              </div>
+              <p>I haven't delved deeply into SQL yet, but I plan to create projects integrating Python and data visualization to explore its potential.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Gráfico das linguagens -->
+      <div id="linguagens-chart" class="mt-5">
+        <canvas id="myChart"></canvas>
+      </div>
+    </section>
+
+    <!-- Seção de projetos -->
+    <section id="projetos" class="container mt-5 pt-5 section-down">
+      <h2 class="text-center mb-5">Projects</h2>
+      <div class="row">
+        <!-- Card do Projeto 1 -->
+        <div class="col-12 col-md-4">
+          <div class="project-card">
+            <img src="IMG/SistemaDeCarrinho.png" alt="Project 1">
+            <div class="card-body">
+              <h3>Shopping Cart System</h3>
+              <p>
+                A Shopping Cart System is essential for e-commerce sites, allowing users to select, organize, and complete purchases efficiently.
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- Card do Projeto 2 -->
+        <div class="col-12 col-md-4">
+          <div class="project-card">
+            <img src="IMG/SistemaDeE-Ticket.png" alt="Project 2">
+            <div class="card-body">
+              <h3>E-Ticket Purchase System</h3>
+              <p>A digital platform to purchase electronic tickets for events.</p>
+            </div>
+          </div>
+        </div>
+        <!-- Card do Projeto 3 -->
+        <div class="col-12 col-md-4">
+          <div class="project-card">
+            <img src="img/SistemaDeAlugarBoardgames.png" alt="Project 3">
+            <div class="card-body">
+              <h3>Board Games Rental System</h3>
+              <p>A platform developed to facilitate the rental of board games.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Seção com ícone do GitHub e botão "Learn More" -->
+    <section id="github" class="container mt-5 pt-5 text-center">
+      <a href="https://github.com/isaqueklehm" target="_blank">
+        <i class="bi bi-github" style="font-size: 2.5rem; color: black;"></i>
+      </a>
+      <div class="mt-3">
+        <a href="https://github.com/isaqueklehm" class="btn btn-primary">Learn More</a>
+      </div>
+    </section>
+
+    <!-- Seção de educação e certificados -->
+    <section id="formacoes-certificados" class="container mt-5 pt-5 section-down">
+      <h2 class="text-center mb-5">Education & Certificates</h2>
+      <div class="row">
+        <!-- Card de Educação -->
+        <div class="col-12 col-md-6">
+          <div class="card card-formation">
+            <div class="card-body">
+              <h3>Education</h3>
+              <a href="https://cursos.alura.com.br/degree/certificate/33c7a7b1-d718-4c20-977b-d9bbbfabfb69?lang=en">
+                <img src="img/Formação.png" alt="Imagem da Educação" class="formation-img">
+                <p class="cert-link-animate link-1to5">Programming Logic Training at Alura.</p>
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- Card de Certificados -->
+        <div class="col-12 col-md-6">
+          <div class="card card-certificate">
+            <div class="card-body">
+              <h3>Certificates</h3>
+              <div class="row certificates-grid">
+                <div class="col-3">
+                  <a href="https://cursos.alura.com.br/certificate/13c95fbe-7e22-4b39-9c34-7e2f29dbf118?lang=en">
+                    <img src="img/Certificado1.png" alt="Certificado 1" class="certificate-img">
+                    <p class="cert-link-animate link-1to5">Starting in Programming: Career and First Steps</p>
+                  </a>
+                </div>
+                <div class="col-3">
+                  <a href="https://cursos.alura.com.br/certificate/fadc64b5-d603-4d49-b989-d8b756bee8fe?lang=en">
+                    <img src="img/Certificado2.png" alt="Certificado 2" class="certificate-img">
+                    <p class="cert-link-animate link-1to5">Programming Logic: Dive into JavaScript</p>
+                  </a>
+                </div>
+                <div class="col-3">
+                  <a href="https://cursos.alura.com.br/certificate/af9eef09-3fe4-49f6-b1a6-9737679bab6d?lang=en">
+                    <img src="img/Certificado3.png" alt="Certificado 3" class="certificate-img">
+                    <p class="cert-link-animate link-1to5">Git and GitHub: Sharing and Collaborating on Projects</p>
+                  </a>
+                </div>
+                <div class="col-3">
+                  <a href="https://cursos.alura.com.br/certificate/3204b5ea-3206-4157-a8fc-059f102f0cb5?lang=en">
+                    <img src="img/Certificado4.png" alt="Certificado 4" class="certificate-img">
+                    <p class="cert-link-animate link-1to5">Programming Logic: Explore Functions and Lists</p>
+                  </a>
+                </div>
+              </div>
+              <div class="row mt-3 certificates-grid">
+                <div class="col-3">
+                  <a href="https://cursos.alura.com.br/certificate/27af6e67-8895-468e-98fd-472f233a5aef?lang=en">
+                    <img src="img/Certificado5.png" alt="Certificado 5" class="certificate-img">
+                    <p class="cert-link-animate link-1to5">Programming Logic: Practicing with Challenges</p>
+                  </a>
+                </div>
+                <div class="col-3">
+                  <a href="https://cursos.alura.com.br/certificate/87e323b5-b326-451f-8ab2-3c8740ca2bbe?lang=en">
+                    <img src="img/Certificado6.png" alt="Certificado 6" class="certificate-img">
+                    <p class="cert-link-animate link-6">Agile Teams: Organizing Roles in a Team</p>
+                  </a>
+                </div>
+                <div class="col-3">
+                  <a href="https://cursos.alura.com.br/certificate/91f5eaf8-8dec-4874-a164-fa3afb2a8946?lang=en">
+                    <img src="img/Certificado7.png" alt="Certificado 7" class="certificate-img">
+                    <p class="cert-link-animate link-7to9">Python for Data Science: Getting Started</p>
+                  </a>
+                </div>
+                <div class="col-3">
+                  <a href="https://cursos.alura.com.br/certificate/2fd32648-371f-46a3-b516-bba435aca456?lang=en">
+                    <img src="img/Certificado8.png" alt="Certificado 8" class="certificate-img">
+                    <p class="cert-link-animate link-7to9">Python for Data Science: Working with Functions, Data Structures and Exceptions</p>
+                  </a>
+                </div>
+                <div class="col-3">
+                  <a href="https://cursos.alura.com.br/certificate/5bddb2ee-5bbe-4370-8f1f-ef78fa4d4c6d?lang=en">
+                    <img src="img/Certificado9.png" alt="Certificado 9" class="certificate-img">
+                    <p class="cert-link-animate link-7to9">NumPy: Efficient Numerical Analysis with Python</p>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção de contato -->
+    <section id="contato" class="container mt-5 pt-5 section-down">
+      <h2 class="text-center mb-5">Contact</h2>
+      <form id="contactForm">
+        <div class="mb-3">
+          <label for="nome" class="form-label">Name</label>
+          <input type="text" class="form-control" id="nome" placeholder="Your name" required>
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" class="form-control" id="email" placeholder="Your email" required>
+        </div>
+        <div class="mb-3">
+          <label for="mensagem" class="form-label">Message</label>
+          <textarea class="form-control" id="mensagem" rows="5" placeholder="Your message" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Send</button>
+      </form>
+      <p id="statusMensagem" class="mt-3 text-center"></p>
+    </section>
+  </div>
+
+  <!-- JS do Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Configuração do gráfico das linguagens (gráfico de barras)
+    const ctx = document.getElementById('myChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Python', 'CSS', 'HTML', 'JavaScript', 'SQL'],
+        datasets: [{
+          label: 'Proficiency Level',
+          data: [60, 40, 50, 55, 10],
+          backgroundColor: [
+            'rgba(48,105,152,0.6)',
+            'rgba(38,77,228,0.6)',
+            'rgba(227,76,38,0.6)',
+            'rgba(240,219,79,0.6)',
+            'rgba(0,128,0,0.6)'
+          ],
+          borderColor: [
+            'rgba(48,105,152,1)',
+            'rgba(38,77,228,1)',
+            'rgba(227,76,38,1)',
+            'rgba(240,219,79,1)',
+            'rgba(0,128,0,1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100
+          }
+        }
+      }
+    });
+    
+    // Envio do formulário de contato
+    document.getElementById("contactForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      var email = document.getElementById("email").value;
+      var statusMensagem = document.getElementById("statusMensagem");
+      
+      if (email.endsWith("@hotmail.com") || email.endsWith("@gmail.com")) {
+        statusMensagem.innerHTML = "<span class='text-success'>Message sent successfully!</span>";
+      } else {
+        statusMensagem.innerHTML = "<span class='text-danger'>Unable to send the message. Please check the email.</span>";
+      }
+    });
+  </script>
+</body>
+</html>
